@@ -4,6 +4,7 @@ import '/services/discord_auth_service.dart';
 import '/services/auth_service.dart';
 import '/screens/profile_screen.dart';
 import '/screens/settings_screen.dart';
+import '/screens/about_us_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -185,6 +186,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(height: 16),
             
+            // First row - 2 buttons
             Row(
               children: [
                 Expanded(
@@ -216,19 +218,34 @@ class _HomeScreenState extends State<HomeScreen> {
             
             const SizedBox(height: 16),
             
-            
-            
-            const SizedBox(height: 16),
-            
-            SizedBox(
-              width: double.infinity,
-              child: _buildActionCard(
-                'Cerrar Sesión',
-                Icons.logout,
-                () {
-                  _showLogoutDialog();
-                },
-              ),
+            // Second row - 2 buttons
+            Row(
+              children: [
+                Expanded(
+                  child: _buildActionCard(
+                    'Sobre Nosotros',
+                    Icons.group,
+                    () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const AboutUsScreen(),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: _buildActionCard(
+                    'Cerrar Sesión',
+                    Icons.logout,
+                    () {
+                      _showLogoutDialog();
+                    },
+                  ),
+                ),
+              ],
             ),
             
             const SizedBox(height: 24),
