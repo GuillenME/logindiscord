@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '/config/discord_config.dart';
+import '/screens/discord_profile_setup.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -212,6 +213,33 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                  
+                  const SizedBox(height: 12),
+                  
+                  // Alternative: Manual Profile Setup
+                  SizedBox(
+                    width: double.infinity,
+                    height: 48,
+                    child: OutlinedButton.icon(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const DiscordProfileSetup(),
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.person_add),
+                      label: const Text('Configurar Perfil Manualmente'),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: const Color(0xFF5865F2),
+                        side: const BorderSide(color: Color(0xFF5865F2)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
                         ),
                       ),
                     ),
