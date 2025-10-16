@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import '../services/discord_auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  final VoidCallback? onLoginSuccess;
+
+  const LoginScreen({Key? key, this.onLoginSuccess}) : super(key: key);
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -11,6 +14,52 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   String _email = '';
   String _password = '';
+  bool _isLoading = false;
+
+  Future<void> _signInWithDiscord() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final user = await DiscordAuthService.signInWithDiscord();
+
+      if (user != null) {
+        // Usuario autenticado exitosamente
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('¡Bienvenido ${user.displayName}!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+
+        // Notificar que el login fue exitoso
+        if (widget.onLoginSuccess != null) {
+          print('Login exitoso, notificando AuthWrapper...');
+          widget.onLoginSuccess!();
+        }
+      } else {
+        // Error en la autenticación
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Error al iniciar sesión con Discord'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -83,16 +132,20 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 10),
                 ElevatedButton(
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                          content: Text('Iniciando sesión con Discord...')),
-                    );
-                  },
+                  onPressed: _isLoading ? null : _signInWithDiscord,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue[700],
                   ),
-                  child: const Text('Iniciar sesión con Discord'),
+                  child: _isLoading
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        )
+                      : const Text('Iniciar sesión con Discord'),
                 ),
               ],
             ),
