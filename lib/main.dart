@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'screens/splash_screen.dart';
-import 'screens/login_screen.dart';
-import 'screens/home_screen.dart';
-import 'screens/profile_screen.dart';
-import 'services/discord_auth_service.dart';
-import 'services/auth_service.dart';
+import '/screens/login_screen.dart';
+import '/screens/home_screen.dart';
+import '/screens/profile_screen.dart';
+import '/services/discord_auth_service.dart';
+import '/services/auth_service.dart';
+import '/screens/splash_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,6 +24,7 @@ class _RootAppState extends State<RootApp> {
   @override
   void initState() {
     super.initState();
+    // Mostrar splash durante 3 segundos
     Future.delayed(const Duration(seconds: 3), () {
       setState(() {
         _showSplash = false;
@@ -34,16 +35,15 @@ class _RootAppState extends State<RootApp> {
   @override
   Widget build(BuildContext context) {
     if (_showSplash) {
+      // Mientras el splash esté activo
       return const MaterialApp(
         debugShowCheckedModeBanner: false,
         home: SplashScreen(),
       );
     }
 
-    // Cuando _showSplash es false, se debe volver al flujo normal de la app.
-    // Aquí se asume que en este mismo archivo existe la clase MyApp (o el widget raíz original).
-    // Reemplace `MyApp()` por el widget raíz que la app ya tenía si tiene otro nombre.
-    return MyApp();
+    // Luego continúa con el flujo original (MyApp)
+    return const MyApp();
   }
 }
 
