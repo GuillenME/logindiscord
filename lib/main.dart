@@ -1,12 +1,50 @@
 import 'package:flutter/material.dart';
-import '/screens/login_screen.dart';
-import '/screens/home_screen.dart';
-import '/screens/profile_screen.dart';
-import '/services/discord_auth_service.dart';
-import '/services/auth_service.dart';
+import 'screens/splash_screen.dart';
+import 'screens/login_screen.dart';
+import 'screens/home_screen.dart';
+import 'screens/profile_screen.dart';
+import 'services/discord_auth_service.dart';
+import 'services/auth_service.dart';
 
 void main() {
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(const RootApp());
+}
+
+class RootApp extends StatefulWidget {
+  const RootApp({Key? key}) : super(key: key);
+
+  @override
+  State<RootApp> createState() => _RootAppState();
+}
+
+class _RootAppState extends State<RootApp> {
+  bool _showSplash = true;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(seconds: 3), () {
+      setState(() {
+        _showSplash = false;
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_showSplash) {
+      return const MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: SplashScreen(),
+      );
+    }
+
+    // Cuando _showSplash es false, se debe volver al flujo normal de la app.
+    // Aquí se asume que en este mismo archivo existe la clase MyApp (o el widget raíz original).
+    // Reemplace `MyApp()` por el widget raíz que la app ya tenía si tiene otro nombre.
+    return MyApp();
+  }
 }
 
 class MyApp extends StatelessWidget {
