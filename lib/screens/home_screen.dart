@@ -4,7 +4,7 @@ import '/services/discord_auth_service.dart';
 import '/services/auth_service.dart';
 import '/screens/profile_screen.dart';
 import '/screens/settings_screen.dart';
-import '/screens/discord_profile_setup.dart';
+import '/screens/about_us_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -186,6 +186,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(height: 16),
             
+            // First row - 2 buttons
             Row(
               children: [
                 Expanded(
@@ -217,79 +218,34 @@ class _HomeScreenState extends State<HomeScreen> {
             
             const SizedBox(height: 16),
             
-            // Quick fix for profile
-            if (userData?['username'] == 'usuario' || userData?['username'] == null)
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.orange.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.orange),
-                ),
-                child: Column(
-                  children: [
-                    const Row(
-                      children: [
-                        Icon(Icons.warning, color: Colors.orange),
-                        SizedBox(width: 8),
-                        Text(
-                          'Perfil no sincronizado',
-                          style: TextStyle(
-                            color: Colors.orange,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
+            // Second row - 2 buttons
+            Row(
+              children: [
+                Expanded(
+                  child: _buildActionCard(
+                    'Sobre Nosotros',
+                    Icons.group,
+                    () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const AboutUsScreen(),
                         ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    const Text(
-                      'Tu perfil muestra datos genéricos. Configura tu perfil real de Discord.',
-                      style: TextStyle(color: Colors.white70, fontSize: 14),
-                    ),
-                    const SizedBox(height: 12),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton.icon(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const DiscordProfileSetup(),
-                            ),
-                          );
-                        },
-                        icon: const Icon(Icons.person_add),
-                        label: const Text('Configurar Mi Perfil'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.orange,
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                      );
+                    },
+                  ),
                 ),
-              ),
-            
-            const SizedBox(height: 16),
-            
-            
-            
-            const SizedBox(height: 16),
-            
-            SizedBox(
-              width: double.infinity,
-              child: _buildActionCard(
-                'Cerrar Sesión',
-                Icons.logout,
-                () {
-                  _showLogoutDialog();
-                },
-              ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: _buildActionCard(
+                    'Cerrar Sesión',
+                    Icons.logout,
+                    () {
+                      _showLogoutDialog();
+                    },
+                  ),
+                ),
+              ],
             ),
             
             const SizedBox(height: 24),
