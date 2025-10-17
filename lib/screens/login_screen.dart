@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '/services/discord_auth_service.dart';
 import '/services/auth_service.dart';
 import '/screens/home_screen.dart';
 import '/screens/qr_login_screen.dart';
@@ -16,7 +15,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isLoading = false;
-  bool _isDiscordLoading = false;
 
   @override
   void dispose() {
@@ -278,83 +276,6 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  Future<void> _loginWithDiscord() async {
-    setState(() {
-      _isDiscordLoading = true;
-    });
-
-    try {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Abriendo Discord para autenticación...'),
-          duration: Duration(seconds: 2),
-        ),
-      );
-
-      final result = await DiscordAuthService.loginWithDiscord();
-      
-      if (result != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('¡Inicio de sesión con Discord exitoso!'),
-            backgroundColor: Colors.green,
-            duration: Duration(seconds: 2),
-          ),
-        );
-        
-        // Navigate to home screen
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const HomeScreen(),
-          ),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Error al iniciar sesión con Discord. Intenta de nuevo.'),
-            backgroundColor: Colors.red,
-            duration: Duration(seconds: 3),
-          ),
-        );
-      }
-    } catch (e) {
-      print('Error en login Discord: $e');
-      
-      String errorMessage = 'Error inesperado';
-      if (e.toString().contains('Discord OAuth no está configurado')) {
-        errorMessage = 'Discord OAuth no está configurado. Usa el código QR o configura las credenciales.';
-      } else if (e.toString().contains('No se recibió el código')) {
-        errorMessage = 'No se recibió autorización de Discord. Intenta de nuevo.';
-      } else if (e.toString().contains('Error al obtener el token')) {
-        errorMessage = 'Error al obtener el token de Discord. Verifica la configuración.';
-      }
-      
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(errorMessage),
-          backgroundColor: Colors.red,
-          duration: const Duration(seconds: 4),
-          action: SnackBarAction(
-            label: 'Usar QR',
-            textColor: Colors.white,
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const QRLoginScreen(),
-                ),
-              );
-            },
-          ),
-        ),
-      );
-    } finally {
-      setState(() {
-        _isDiscordLoading = false;
-      });
-    }
-  }
 
   void _showRegisterDialog() {
     showDialog(

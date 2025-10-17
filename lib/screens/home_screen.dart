@@ -4,7 +4,7 @@ import '/services/discord_auth_service.dart';
 import '/services/auth_service.dart';
 import '/screens/profile_screen.dart';
 import '/screens/settings_screen.dart';
-import '/screens/about_us_screen.dart';
+import '/screens/discord_profile_setup.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -35,7 +35,8 @@ class _HomeScreenState extends State<HomeScreen> {
       // Try local auth
       final localUser = await AuthService.getCurrentUser();
       if (localUser != null) {
-        final profileData = await AuthService.getUserProfile(localUser['email']!);
+        final profileData =
+            await AuthService.getUserProfile(localUser['email']!);
         setState(() {
           userData = profileData;
           isLoading = false;
@@ -105,7 +106,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     radius: 16,
                     backgroundColor: const Color(0xFF5865F2),
                     backgroundImage: userData?['avatar'] != null
-                        ? NetworkImage('https://cdn.discordapp.com/avatars/${userData!['id']}/${userData!['avatar']}.png')
+                        ? NetworkImage(
+                            'https://cdn.discordapp.com/avatars/${userData!['id']}/${userData!['avatar']}.png')
                         : null,
                     child: userData?['avatar'] == null
                         ? Text(
@@ -172,9 +174,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-            
+
             const SizedBox(height: 24),
-            
+
             // Quick actions
             const Text(
               'Acciones Rápidas',
@@ -185,7 +187,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // First row - 2 buttons
             Row(
               children: [
@@ -197,7 +199,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ProfileScreen(userData: userData),
+                          builder: (context) =>
+                              ProfileScreen(userData: userData),
                         ),
                       );
                     },
@@ -215,41 +218,85 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 16),
-            
-            // Second row - 2 buttons
-            Row(
-              children: [
-                Expanded(
-                  child: _buildActionCard(
-                    'Sobre Nosotros',
-                    Icons.group,
-                    () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const AboutUsScreen(),
+
+            // Quick fix for profile
+            if (userData?['username'] == 'usuario' ||
+                userData?['username'] == null)
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.orange.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.orange),
+                ),
+                child: Column(
+                  children: [
+                    const Row(
+                      children: [
+                        Icon(Icons.warning, color: Colors.orange),
+                        SizedBox(width: 8),
+                        Text(
+                          'Perfil no sincronizado',
+                          style: TextStyle(
+                            color: Colors.orange,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      );
-                    },
-                  ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Tu perfil muestra datos genéricos. Configura tu perfil real de Discord.',
+                      style: TextStyle(color: Colors.white70, fontSize: 14),
+                    ),
+                    const SizedBox(height: 12),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const DiscordProfileSetup(),
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.person_add),
+                        label: const Text('Configurar Mi Perfil'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.orange,
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: _buildActionCard(
-                    'Cerrar Sesión',
-                    Icons.logout,
-                    () {
-                      _showLogoutDialog();
-                    },
-                  ),
-                ),
-              ],
+              ),
+
+            const SizedBox(height: 16),
+
+            const SizedBox(height: 16),
+
+            SizedBox(
+              width: double.infinity,
+              child: _buildActionCard(
+                'Cerrar Sesión',
+                Icons.logout,
+                () {
+                  _showLogoutDialog();
+                },
+              ),
             ),
-            
+
             const SizedBox(height: 24),
-            
+
             // User info summary
             Container(
               width: double.infinity,
@@ -277,7 +324,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   _buildInfoRow('Usuario', userData?['username'] ?? 'N/A'),
                   _buildInfoRow('ID', userData?['id'] ?? 'N/A'),
                   _buildInfoRow('Email', userData?['email'] ?? 'N/A'),
-                  _buildInfoRow('Verificado', userData?['verified'] == true ? 'Sí' : 'No'),
+                  _buildInfoRow('Verificado',
+                      userData?['verified'] == true ? 'Sí' : 'No'),
                 ],
               ),
             ),
@@ -353,65 +401,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void _showGuildsDialog() async {
-    final guilds = await DiscordAuthService.getStoredGuilds();
-    if (guilds == null || guilds.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('No se encontraron servidores')),
-      );
-      return;
-    }
-
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF23272A),
-        title: const Text(
-          'Tus Servidores',
-          style: TextStyle(color: Colors.white),
-        ),
-        content: SizedBox(
-          width: double.maxFinite,
-          child: ListView.builder(
-            shrinkWrap: true,
-            itemCount: guilds.length,
-            itemBuilder: (context, index) {
-              final guild = guilds[index];
-              return ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: const Color(0xFF5865F2),
-                  backgroundImage: guild['icon'] != null
-                      ? NetworkImage('https://cdn.discordapp.com/icons/${guild['id']}/${guild['icon']}.png')
-                      : null,
-                  child: guild['icon'] == null
-                      ? Text(
-                          guild['name'][0].toUpperCase(),
-                          style: const TextStyle(color: Colors.white),
-                        )
-                      : null,
-                ),
-                title: Text(
-                  guild['name'],
-                  style: const TextStyle(color: Colors.white),
-                ),
-                subtitle: Text(
-                  'ID: ${guild['id']}',
-                  style: const TextStyle(color: Colors.grey),
-                ),
-              );
-            },
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cerrar', style: TextStyle(color: Color(0xFF5865F2))),
-          ),
-        ],
-      ),
-    );
-  }
-
   void _showLogoutDialog() {
     showDialog(
       context: context,
@@ -441,7 +430,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 (route) => false,
               );
             },
-            child: const Text('Cerrar Sesión', style: TextStyle(color: Color(0xFFF04747))),
+            child: const Text('Cerrar Sesión',
+                style: TextStyle(color: Color(0xFFF04747))),
           ),
         ],
       ),
@@ -452,10 +442,10 @@ class _HomeScreenState extends State<HomeScreen> {
     try {
       const discordUrl = 'https://discord.com/login';
       final uri = Uri.parse(discordUrl);
-      
+
       if (await canLaunchUrl(uri)) {
         await launchUrl(uri, mode: LaunchMode.externalApplication);
-        
+
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Discord abierto en el navegador'),

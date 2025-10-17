@@ -4,9 +4,47 @@ import '/screens/home_screen.dart';
 import '/screens/profile_screen.dart';
 import '/services/discord_auth_service.dart';
 import '/services/auth_service.dart';
+import '/screens/splash_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(const RootApp());
+}
+
+class RootApp extends StatefulWidget {
+  const RootApp({Key? key}) : super(key: key);
+
+  @override
+  State<RootApp> createState() => _RootAppState();
+}
+
+class _RootAppState extends State<RootApp> {
+  bool _showSplash = true;
+
+  @override
+  void initState() {
+    super.initState();
+    // Mostrar splash durante 3 segundos
+    Future.delayed(const Duration(seconds: 3), () {
+      setState(() {
+        _showSplash = false;
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_showSplash) {
+      // Mientras el splash esté activo
+      return const MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: SplashScreen(),
+      );
+    }
+
+    // Luego continúa con el flujo original (MyApp)
+    return const MyApp();
+  }
 }
 
 class MyApp extends StatelessWidget {
