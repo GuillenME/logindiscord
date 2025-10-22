@@ -18,9 +18,9 @@ class DiscordConfig {
   static const String discordApiBase = 'https://discord.com/api/v10';
   
   // OAuth scopes
-  static const List<String> scopes = [com.example.logindiscord://oauth
+  static const List<String> scopes = [
     'identify',
-    'email',com.example.logindiscord://oauth
+    'email',
     'guilds',
     'guilds.members.read',
   ];
