@@ -28,7 +28,7 @@ class DiscordAuthService {
       // Open the Discord OAuth page
       final result = await FlutterWebAuth2.authenticate(
         url: authUrl.toString(),
-        callbackUrlScheme: 'com.example.logindiscord',
+        callbackUrlScheme: 'http',
       );
 
       print('Resultado de Discord OAuth: $result');
