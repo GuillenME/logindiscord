@@ -7,7 +7,7 @@ class DiscordConfig {
   // 4. Copia el Client ID y Client Secret aquí
   
   static const String clientId = '1430609415479890074';
-  static const String clientSecret = '_AMePvP_v9lme48PmXmgPMN3Zj63reGJ';
+  static const String clientSecret = 'MaKi6OAnXoOM1BAtj9PYQf-AWSMS62Gn';
   
   // Redirect URI - debe coincidir con el configurado en Discord Developer Portal
   static const String redirectUri = 'com.example.logindiscord://oauth';
@@ -18,9 +18,9 @@ class DiscordConfig {
   static const String discordApiBase = 'https://discord.com/api/v10';
   
   // OAuth scopes
-  static const List<String> scopes = [
+  static const List<String> scopes = [com.example.logindiscord://oauth
     'identify',
-    'email',
+    'email',com.example.logindiscord://oauth
     'guilds',
     'guilds.members.read',
   ];

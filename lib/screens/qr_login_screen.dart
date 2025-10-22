@@ -67,58 +67,16 @@ class _QRLoginScreenState extends State<QRLoginScreen> with WidgetsBindingObserv
       }
     } catch (e) {
       print('Error en autenticación Discord real: $e');
-      // Continuar con el flujo de fallback
-    }
-    
-    // Fallback: Simular que el usuario se logueó en Discord web
-    // Usar datos más realistas basados en el perfil real de Discord
-    final discordData = {
-      'id': '123456789012345678', // ID real de Discord
-      'username': 'mariana06', // Tu username real de Discord
-      'discriminator': '0001',
-      'global_name': 'Mariana', // Nombre real
-      'avatar': null, // Sin avatar personalizado por ahora
-      'email': 'mariana@discord.com', // Email real
-      'verified': true,
-      'created_at': '2020-01-15T10:30:00.000Z', // Fecha real de creación
-      'premium_type': null, // Sin Nitro
-      'locale': 'es',
-    };
-
-    // Simular algunos servidores de Discord
-    final guilds = [
-      {
-        'id': '111111111111111111',
-        'name': 'Servidor de Prueba',
-        'icon': null,
-      },
-      {
-        'id': '222222222222222222',
-        'name': 'Gaming Community',
-        'icon': null,
-      },
-    ];
-
-    // Guardar datos de Discord
-    await DiscordAuthService.saveAuthData('qr_token_${DateTime.now().millisecondsSinceEpoch}', discordData, guilds);
-    
-    // Mostrar mensaje de éxito
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('¡Bienvenido ${discordData['username']}! Perfil sincronizado con Discord.'),
-          backgroundColor: Colors.green,
-          duration: const Duration(seconds: 3),
-        ),
-      );
-      
-      // Navegar al home
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const HomeScreen(),
-        ),
-      );
+      // Mostrar error al usuario
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error de autenticación: $e'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 5),
+          ),
+        );
+      }
     }
   }
 
