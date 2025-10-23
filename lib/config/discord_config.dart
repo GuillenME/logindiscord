@@ -10,7 +10,7 @@ class DiscordConfig {
   static const String clientSecret = 'MaKi6OAnXoOM1BAtj9PYQf-AWSMS62Gn';
   
   // Redirect URI - debe coincidir con el configurado en Discord Developer Portal
-  static const String redirectUri = 'http://localhost:3000/callback';
+  static const String redirectUri = 'com.example.logindiscord://oauth';
   
   // Discord API URLs
   static const String discordAuthUrl = 'https://discord.com/api/oauth2/authorize';
