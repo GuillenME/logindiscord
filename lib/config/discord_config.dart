@@ -6,8 +6,9 @@ class DiscordConfig {
   // 3. Ve a la sección "OAuth2" 
   // 4. Copia el Client ID y Client Secret aquí
   
-  static const String clientId = 'YOUR_DISCORD_CLIENT_ID_HERE';
-  static const String clientSecret = 'YOUR_DISCORD_CLIENT_SECRET_HERE';
+  
+  static const String clientId = '1430609415479890074';
+  static const String clientSecret = 'MaKi6OAnXoOM1BAtj9PYQf-AWSMS62Gn';
   
   // Redirect URI - debe coincidir con el configurado en Discord Developer Portal
   static const String redirectUri = 'com.example.logindiscord://oauth';
