@@ -11,7 +11,8 @@ class QRLoginScreen extends StatefulWidget {
   State<QRLoginScreen> createState() => _QRLoginScreenState();
 }
 
-class _QRLoginScreenState extends State<QRLoginScreen> with WidgetsBindingObserver {
+class _QRLoginScreenState extends State<QRLoginScreen>
+    with WidgetsBindingObserver {
   bool _isLoading = false;
   String _qrData = '';
   String _discordAuthUrl = '';
@@ -41,11 +42,11 @@ class _QRLoginScreenState extends State<QRLoginScreen> with WidgetsBindingObserv
     // Intentar usar autenticación real de Discord primero
     try {
       final result = await DiscordAuthService.loginWithDiscord();
-      
+
       if (result != null) {
         // Autenticación exitosa con Discord real
         print('Login exitoso con Discord: ${result['user']['username']}');
-        
+
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -54,7 +55,7 @@ class _QRLoginScreenState extends State<QRLoginScreen> with WidgetsBindingObserv
               duration: const Duration(seconds: 2),
             ),
           );
-          
+
           // Navegar al home
           Navigator.pushReplacement(
             context,
@@ -69,7 +70,7 @@ class _QRLoginScreenState extends State<QRLoginScreen> with WidgetsBindingObserv
       print('Error en autenticación Discord real: $e');
       // Continuar con el flujo de fallback
     }
-    
+
     // Fallback: Simular que el usuario se logueó en Discord web
     // Usar datos más realistas basados en el perfil real de Discord
     final discordData = {
@@ -100,18 +101,22 @@ class _QRLoginScreenState extends State<QRLoginScreen> with WidgetsBindingObserv
     ];
 
     // Guardar datos de Discord
-    await DiscordAuthService.saveAuthData('qr_token_${DateTime.now().millisecondsSinceEpoch}', discordData, guilds);
-    
+    await DiscordAuthService.saveAuthData(
+        'qr_token_${DateTime.now().millisecondsSinceEpoch}',
+        discordData,
+        guilds);
+
     // Mostrar mensaje de éxito
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('¡Bienvenido ${discordData['username']}! Perfil sincronizado con Discord.'),
+          content: Text(
+              '¡Bienvenido ${discordData['username']}! Perfil sincronizado con Discord.'),
           backgroundColor: Colors.green,
           duration: const Duration(seconds: 3),
         ),
       );
-      
+
       // Navegar al home
       Navigator.pushReplacement(
         context,
@@ -125,7 +130,7 @@ class _QRLoginScreenState extends State<QRLoginScreen> with WidgetsBindingObserv
   void _generateQRData() {
     // Use a direct Discord login URL instead of OAuth
     const discordLoginUrl = 'https://discord.com/login';
-    
+
     setState(() {
       _discordAuthUrl = discordLoginUrl;
       _qrData = discordLoginUrl;
@@ -170,9 +175,9 @@ class _QRLoginScreenState extends State<QRLoginScreen> with WidgetsBindingObserv
                 size: 40,
               ),
             ),
-            
+
             const SizedBox(height: 30),
-            
+
             const Text(
               'Iniciar Sesión con Discord',
               style: TextStyle(
@@ -182,9 +187,9 @@ class _QRLoginScreenState extends State<QRLoginScreen> with WidgetsBindingObserv
               ),
               textAlign: TextAlign.center,
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             const Text(
               'Escanea el código QR para ir a Discord o usa el enlace directo',
               style: TextStyle(
@@ -193,9 +198,9 @@ class _QRLoginScreenState extends State<QRLoginScreen> with WidgetsBindingObserv
               ),
               textAlign: TextAlign.center,
             ),
-            
+
             const SizedBox(height: 40),
-            
+
             // QR Code
             Container(
               padding: const EdgeInsets.all(16),
@@ -204,7 +209,7 @@ class _QRLoginScreenState extends State<QRLoginScreen> with WidgetsBindingObserv
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.2),
+                    color: Colors.orange.withOpacity(0.1),
                     blurRadius: 10,
                     offset: const Offset(0, 5),
                   ),
@@ -227,9 +232,9 @@ class _QRLoginScreenState extends State<QRLoginScreen> with WidgetsBindingObserv
                       ),
                     ),
             ),
-            
+
             const SizedBox(height: 24),
-            
+
             // Direct Link Button
             SizedBox(
               width: double.infinity,
@@ -247,9 +252,9 @@ class _QRLoginScreenState extends State<QRLoginScreen> with WidgetsBindingObserv
                 ),
               ),
             ),
-            
+
             const SizedBox(height: 12),
-            
+
             // Instructions
             Container(
               padding: const EdgeInsets.all(12),
@@ -285,9 +290,9 @@ class _QRLoginScreenState extends State<QRLoginScreen> with WidgetsBindingObserv
                 ],
               ),
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Alternative Login
             TextButton(
               onPressed: () => Navigator.pop(context),
@@ -315,13 +320,14 @@ class _QRLoginScreenState extends State<QRLoginScreen> with WidgetsBindingObserv
         final uri = Uri.parse(_discordAuthUrl);
         if (await canLaunchUrl(uri)) {
           await launchUrl(uri, mode: LaunchMode.externalApplication);
-          
+
           // Show instruction dialog
           _showInstructionDialog();
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('No se pudo abrir Discord. Verifica tu configuración.'),
+              content:
+                  Text('No se pudo abrir Discord. Verifica tu configuración.'),
               backgroundColor: Colors.red,
             ),
           );

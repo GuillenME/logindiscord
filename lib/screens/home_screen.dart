@@ -35,7 +35,8 @@ class _HomeScreenState extends State<HomeScreen> {
       // Try local auth
       final localUser = await AuthService.getCurrentUser();
       if (localUser != null) {
-        final profileData = await AuthService.getUserProfile(localUser['email']!);
+        final profileData =
+            await AuthService.getUserProfile(localUser['email']!);
         setState(() {
           userData = profileData;
           isLoading = false;
@@ -105,7 +106,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     radius: 16,
                     backgroundColor: const Color(0xFF5865F2),
                     backgroundImage: userData?['avatar'] != null
-                        ? NetworkImage('https://cdn.discordapp.com/avatars/${userData!['id']}/${userData!['avatar']}.png')
+                        ? NetworkImage(
+                            'https://cdn.discordapp.com/avatars/${userData!['id']}/${userData!['avatar']}.png')
                         : null,
                     child: userData?['avatar'] == null
                         ? Text(
@@ -172,9 +174,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-            
+
             const SizedBox(height: 24),
-            
+
             // Quick actions
             const Text(
               'Acciones Rápidas',
@@ -185,7 +187,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            
+
             Row(
               children: [
                 Expanded(
@@ -196,7 +198,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ProfileScreen(userData: userData),
+                          builder: (context) =>
+                              ProfileScreen(userData: userData),
                         ),
                       );
                     },
@@ -214,16 +217,17 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Quick fix for profile
-            if (userData?['username'] == 'usuario' || userData?['username'] == null)
+            if (userData?['username'] == 'usuario' ||
+                userData?['username'] == null)
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Colors.orange.withValues(alpha: 0.1),
+                  color: Colors.orange.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(color: Colors.orange),
                 ),
@@ -274,13 +278,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
               ),
-            
+
             const SizedBox(height: 16),
-            
-            
-            
+
             const SizedBox(height: 16),
-            
+
             SizedBox(
               width: double.infinity,
               child: _buildActionCard(
@@ -291,9 +293,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
             ),
-            
+
             const SizedBox(height: 24),
-            
+
             // User info summary
             Container(
               width: double.infinity,
@@ -321,7 +323,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   _buildInfoRow('Usuario', userData?['username'] ?? 'N/A'),
                   _buildInfoRow('ID', userData?['id'] ?? 'N/A'),
                   _buildInfoRow('Email', userData?['email'] ?? 'N/A'),
-                  _buildInfoRow('Verificado', userData?['verified'] == true ? 'Sí' : 'No'),
+                  _buildInfoRow('Verificado',
+                      userData?['verified'] == true ? 'Sí' : 'No'),
                 ],
               ),
             ),
@@ -397,7 +400,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-
   void _showLogoutDialog() {
     showDialog(
       context: context,
@@ -427,7 +429,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 (route) => false,
               );
             },
-            child: const Text('Cerrar Sesión', style: TextStyle(color: Color(0xFFF04747))),
+            child: const Text('Cerrar Sesión',
+                style: TextStyle(color: Color(0xFFF04747))),
           ),
         ],
       ),
@@ -438,10 +441,10 @@ class _HomeScreenState extends State<HomeScreen> {
     try {
       const discordUrl = 'https://discord.com/login';
       final uri = Uri.parse(discordUrl);
-      
+
       if (await canLaunchUrl(uri)) {
         await launchUrl(uri, mode: LaunchMode.externalApplication);
-        
+
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Discord abierto en el navegador'),
